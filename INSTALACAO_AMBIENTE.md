@@ -11,11 +11,7 @@ Este guia cobre desde a instalação do Conda até a execução completa do pipe
 
 ---
 
-<<<<<<< HEAD
 ## Parte 1: Instalar Conda (se não tiver)
-=======
-##  Parte 1: Instalar Conda (se não tiver)
->>>>>>> 56eb96e4472ccab668005a192013d8ec6fe394e8
 
 ### Opção A: Instalar Miniconda (Recomendado - Mais leve)
 
