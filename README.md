@@ -135,11 +135,13 @@ https://drive.google.com/drive/folders/1WFkw54HojR1y_Io26_cNV5ni3888I2FZ?usp=sha
   - 500 registros incompletos ou com falhas (para testar validação)
 - Anotações NER já realizadas
 - Pronto para importação no Label Studio
+- **Arquivo de teste event-driven**: Inclui arquivo JSON para testar detecção automática de novos arquivos no bucket Bronze (inbox)
 
 **Propósito do dataset misto**:
 - Testar a **camada Silver** com validações de qualidade de dados
 - Demonstrar **pipeline robusto** que identifica e remove dados inválidos
 - Calcular **métricas de qualidade** (taxa de limpeza, retenção)
+- **Testar event-driven**: Arquivo adicional para simular chegada de novos dados no inbox
 
 **Como usar**:
 1. Baixe o dataset do Google Drive
@@ -499,6 +501,8 @@ docker-compose logs -f label-studio
 ## Reprodução do Cenário Event-Driven
 
 Este guia mostra como testar o fluxo completo event-driven do pipeline.
+
+**Vídeo demonstrativo**: https://drive.google.com/file/d/1MWBXpvQyZESNMVfSMm9WTBzPWJRU-WAS/view?usp=sharing
 
 ### Cenário: Pipeline Detecta Novo Arquivo e Processa Automaticamente
 
