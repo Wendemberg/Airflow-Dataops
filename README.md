@@ -130,9 +130,16 @@ https://drive.google.com/drive/folders/1WFkw54HojR1y_Io26_cNV5ni3888I2FZ?usp=sha
 ```
 
 **Conteúdo**:
-- 500 registros de transações comerciais (cliente, produto, valor, etc.)
+- **1000 registros totais** de transações comerciais
+  - 500 registros completos e válidos (cliente, produto, valor, etc.)
+  - 500 registros incompletos ou com falhas (para testar validação)
 - Anotações NER já realizadas
 - Pronto para importação no Label Studio
+
+**Propósito do dataset misto**:
+- Testar a **camada Silver** com validações de qualidade de dados
+- Demonstrar **pipeline robusto** que identifica e remove dados inválidos
+- Calcular **métricas de qualidade** (taxa de limpeza, retenção)
 
 **Como usar**:
 1. Baixe o dataset do Google Drive
@@ -140,25 +147,34 @@ https://drive.google.com/drive/folders/1WFkw54HojR1y_Io26_cNV5ni3888I2FZ?usp=sha
 3. Execute o pipeline via Airflow
 4. Visualize resultados no Dashboard
 
+**Resultado esperado após processamento**:
+- Bronze: 1000 registros (dados brutos)
+- Silver: ~500 registros (após validação)
+- Gold: ~500 registros (agregados)
+- Taxa de limpeza: ~50%
+
 Ver instruções completas em **[INSTALACAO_AMBIENTE.md](INSTALACAO_AMBIENTE.md) - Parte 8.6**
 
 ## Principais Features
 
 - **Event-Driven Architecture** - Airflow detecta novos arquivos automaticamente
-- **3 Camadas (Bronze/Silver/Gold)** - Arquitetura Medallion
+- **3 Camadas (Bronze/Silver/Gold)** - Arquitetura Medallion completa
+- **Validação de Qualidade de Dados** - Pipeline remove ~50% de registros inválidos
 - **NER Extraction** - Named Entity Recognition via Label Studio
-- **Debug Automático** - Logs detalhados de extração
-- **Segurança** - Credenciais em variáveis de ambiente
-- **Auto-detecção de Ambiente** - Funciona local e Docker
-- **Dashboard Real-time** - Streamlit com atualização automática
+- **Monitoramento de Pipeline** - Dashboard com métricas Bronze/Silver/Gold
+- **Debug Automático** - Logs detalhados de extração e validação
+- **Segurança** - Credenciais em variáveis de ambiente (zero hardcoded)
+- **Auto-detecção de Ambiente** - Funciona local e Docker sem mudanças
+- **Dashboard Real-time** - Streamlit com atualização automática (TTL 60s)
 
 ## Métricas
 
-- **500 registros** no dataset
-- **8 KPIs** pré-calculados
-- **3 camadas** de storage
-- **0 credenciais** hardcoded
-- **100% containerizado**
+- **1000 registros** no dataset (500 válidos + 500 inválidos)
+- **~50% taxa de limpeza** (validação Silver remove registros problemáticos)
+- **8 KPIs** pré-calculados na camada Gold
+- **3 camadas** de storage (Bronze/Silver/Gold)
+- **0 credenciais** hardcoded (100% variáveis de ambiente)
+- **100% containerizado** (Docker + Docker Compose)
 
 ## Desenvolvimento
 
@@ -289,10 +305,13 @@ Ver mais em **[SETUP_COMPLETO.md](SETUP_COMPLETO.md) - Troubleshooting**
 - **Impacto**: Não aproveita paralelização para múltiplos arquivos
 - **Mitigação futura**: Implementar processamento paralelo com Celery ou Ray
 
-#### 3. Validação de Dados Básica
-- **Limitação**: Validações simples (campos obrigatórios, tipos)
-- **Impacto**: Dados malformados podem passar pela Silver
-- **Mitigação futura**: Integrar Great Expectations para validações robustas
+#### 3. Validação de Dados
+- **Implementação**: Validações de campos obrigatórios, tipos, dados não vazios
+- **Dataset misto intencional**: 1000 registros (500 válidos + 500 inválidos)
+  - Demonstra robustez do pipeline em lidar com dados problemáticos
+  - Calcula métricas de qualidade (taxa de limpeza ~50%)
+- **Limitação**: Validações simples, sem regras de negócio complexas
+- **Mitigação futura**: Integrar Great Expectations para validações avançadas
 
 #### 4. Ausência de Versionamento de Schema
 - **Limitação**: Mudanças no schema Label Studio podem quebrar pipeline
@@ -360,8 +379,9 @@ Extraindo labels NER...
 [EXTRAÍDO] cliente: 'joão silva'
 [EXTRAÍDO] produto: 'notebook'
 [EXTRAÍDO] valor: '2500'
-Registros válidos: 485/500
-Estatísticas: invalid_id=10, invalid_data=5
+Registros válidos: ~500/1000
+Estatísticas: invalid_id=~250, invalid_data=~250
+Taxa de limpeza: ~50%
 ```
 
 #### 3. Camada Gold (Aggregations)
@@ -389,16 +409,16 @@ DIAGNÓSTICO COMPLETO DO PIPELINE
 
 CAMADA BRONZE:
   Arquivos: 1
-  Registros: 500
+  Registros: 1000
 
 CAMADA SILVER:
   Arquivos: 1
-  Registros: 485
-  Taxa de retenção: 97%
+  Registros: ~500
+  Taxa de retenção: ~50%
 
 CAMADA GOLD:
   Arquivos: 1
-  Registros: 485
+  Registros: ~500
   KPIs calculados: 8
 ```
 
@@ -434,7 +454,7 @@ CAMADA GOLD:
 **Screenshot esperado**:
 ```
 📂 Registros Bronze    ✅ Registros Silver    ⭐ Registros Gold    🧹 Taxa de Limpeza
-     500                     485                    485                3.0%
+     1000                    ~500                   ~500               ~50.0%
 ```
 
 ### Logs e Monitoramento
@@ -551,7 +571,7 @@ Conectando ao Label Studio...
 Extraindo dados do projeto 3...
 Enviando para bucket bronze...
 Arquivo bronze_20250115_143022.json criado com sucesso!
-500 registros enviados para Bronze
+1000 registros enviados para Bronze
 ```
 
 #### Passo 6: Observar Pipeline Event-Driven em Ação
@@ -585,10 +605,10 @@ Arquivo bronze_20250115_143022.json criado com sucesso!
 
 **Via Dashboard** (http://localhost:8501):
 - Aba "Pipeline" deve mostrar:
-  - 500 registros Bronze
-  - ~485-490 registros Silver (alguns podem ser invalidados)
-  - ~485-490 registros Gold
-  - Taxa de limpeza ~2-3%
+  - 1000 registros Bronze
+  - ~500 registros Silver (metade removida por validação)
+  - ~500 registros Gold
+  - Taxa de limpeza ~50%
 
 **Via CLI**:
 ```bash
