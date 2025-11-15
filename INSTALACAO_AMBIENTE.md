@@ -490,12 +490,8 @@ streamlit run streamlit\dashboard.py
    [EXTRAÍDO] cliente: 'joão silva'
    [EXTRAÍDO] valor: '150.50'
 
-<<<<<<< HEAD
 Pipeline executado com sucesso!
-=======
- Pipeline executado com sucesso!
->>>>>>> 56eb96e4472ccab668005a192013d8ec6fe394e8
-```
+
 
 **Saída esperada do Streamlit**:
 ```
