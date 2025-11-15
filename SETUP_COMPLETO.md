@@ -1,13 +1,13 @@
-# 🚀 Setup Completo - Guia Passo a Passo
+# Setup Completo - Guia Passo a Passo
 
-## 📋 Pré-requisitos
+## Pré-requisitos
 
 Antes de começar, certifique-se de ter instalado:
 
-- ✅ **Docker** (versão 20.10 ou superior)
-- ✅ **Docker Compose** (versão 1.29 ou superior)
-- ✅ **Git** (para clonar o repositório)
-- ✅ **Python 3.9+** (apenas se for executar scripts localmente)
+- **Docker** (versão 20.10 ou superior)
+- **Docker Compose** (versão 1.29 ou superior)
+- **Git** (para clonar o repositório)
+- **Python 3.9+** (apenas se for executar scripts localmente)
 
 ### Verificar Instalação
 
@@ -27,7 +27,7 @@ python --version
 
 ---
 
-## 📥 Passo 1: Clonar o Repositório
+## Passo 1: Clonar o Repositório
 
 ```bash
 # Clone o projeto
@@ -39,7 +39,7 @@ cd Dataops
 
 ---
 
-## 🔐 Passo 2: Configurar Variáveis de Ambiente
+## Passo 2: Configurar Variáveis de Ambiente
 
 ### 2.1 Criar arquivo .env
 
@@ -89,7 +89,7 @@ AIRFLOW_UID=50000
 
 ---
 
-## 🐳 Passo 3: Iniciar os Containers Docker
+## Passo 3: Iniciar os Containers Docker
 
 ### 3.1 Build das imagens
 
@@ -128,11 +128,11 @@ label-studio            Up (healthy)        0.0.0.0:8001->8080/tcp
 streamlit-dashboard     Up (healthy)        0.0.0.0:8501->8501/tcp
 ```
 
-> **⏱️ Aguarde**: Pode demorar 2-3 minutos até todos os containers ficarem "healthy"
+> **Aguarde**: Pode demorar 2-3 minutos até todos os containers ficarem "healthy"
 
 ---
 
-## 🏷️ Passo 4: Configurar Label Studio e Obter Token LEGACY
+## Passo 4: Configurar Label Studio e Obter Token LEGACY
 
 ### 4.1 Acessar Label Studio
 
@@ -143,7 +143,7 @@ http://localhost:8001
 
 ### 4.2 Criar Conta no Primeiro Acesso
 
-**⚠️ IMPORTANTE**: No primeiro acesso, você precisa criar uma conta.
+**IMPORTANTE**: No primeiro acesso, você precisa criar uma conta.
 
 #### Passo a passo:
 
@@ -163,7 +163,7 @@ http://localhost:8001
 
 ### 4.3 Configurar Legacy Token (IMPORTANTE!)
 
-**⚠️ ATENÇÃO**: O pipeline precisa do **LEGACY TOKEN**, não do Access Token normal!
+**ATENÇÃO**: O pipeline precisa do **LEGACY TOKEN**, não do Access Token normal!
 
 #### Passo a passo para configurar e obter o Legacy Token:
 
@@ -172,8 +172,8 @@ http://localhost:8001
 1. **No Label Studio, clique em "Organization"** (menu lateral esquerdo)
 2. **Clique em "API Tokens Settings"**
 3. **Desmarque todas as flags EXCETO "Legacy tokens"**
-   - ✅ Deixe APENAS "Legacy tokens" marcado
-   - ❌ Desmarque as outras opções (isso evita que o token expire)
+   - Deixe APENAS "Legacy tokens" marcado
+   - Desmarque as outras opções (isso evita que o token expire)
 4. **Clique em "Save"**
 
 **Parte B: Gerar/Copiar o Legacy Token**
@@ -235,7 +235,7 @@ docker-compose restart streamlit
 
 ---
 
-## 📊 Passo 5: Criar Projeto no Label Studio (se necessário)
+## Passo 5: Criar Projeto no Label Studio (se necessário)
 
 Se você não tiver o projeto ID 4, crie um novo:
 
@@ -291,13 +291,13 @@ https://drive.google.com/drive/folders/1WFkw54HojR1y_Io26_cNV5ni3888I2FZ?usp=sha
 **Conteúdo do dataset**:
 - Transações comerciais com dados estruturados
 - Anotações NER já realizadas (cliente, produto, valor, quantidade, etc.)
-- 950+ registros prontos para processamento
+- 500 registros prontos para processamento
 
-> **💡 NOTA**: Após importar, o dataset estará pronto para ser processado pelo pipeline Airflow.
+> **NOTA**: Após importar, o dataset estará pronto para ser processado pelo pipeline Airflow.
 
 ---
 
-## ✅ Passo 6: Verificar Serviços
+## Passo 6: Verificar Serviços
 
 Acesse cada serviço para verificar se está funcionando:
 
@@ -309,9 +309,9 @@ Senha: airflow
 ```
 
 **O que verificar**:
-- [ ] Interface do Airflow carrega
-- [ ] DAGs aparecem na lista
-- [ ] Nenhum erro nos logs
+- Interface do Airflow carrega
+- DAGs aparecem na lista
+- Nenhum erro nos logs
 
 ### 6.2 MinIO Console
 ```
@@ -321,8 +321,8 @@ Senha: <seu MINIO_SECRET_KEY do .env>
 ```
 
 **O que verificar**:
-- [ ] Interface do MinIO carrega
-- [ ] Buckets `bronze`, `silver`, `gold` e `inbox` existem
+- Interface do MinIO carrega
+- Buckets `bronze`, `silver`, `gold` e `inbox` existem
 
 ### 6.3 Label Studio
 ```
@@ -334,9 +334,9 @@ Senha: dataops@123
 > **Ou se usou as credenciais padrão**: admin@localhost.com / 123456
 
 **O que verificar**:
-- [ ] Interface carrega
-- [ ] Projeto aparece
-- [ ] Token foi copiado corretamente
+- Interface carrega
+- Projeto aparece
+- Token foi copiado corretamente
 
 ### 6.4 Streamlit Dashboard
 ```
@@ -345,12 +345,12 @@ URL: http://localhost:8501
 ```
 
 **O que verificar**:
-- [ ] Dashboard carrega
-- [ ] Pode estar vazio se ainda não houver dados (normal!)
+- Dashboard carrega
+- Pode estar vazio se ainda não houver dados (normal!)
 
 ---
 
-## 🎯 Passo 7: Executar Pipeline pela Primeira Vez
+## Passo 7: Executar Pipeline pela Primeira Vez
 
 ### Opção A: Executar via Airflow (Recomendado)
 
@@ -398,17 +398,17 @@ REGISTRO 0:
       [EXTRAÍDO] cliente: 'joão silva'
       [EXTRAÍDO] valor: '150.50'
 
-📊 Resumo de dados extraídos da API do Label Studio:
+Resumo de dados extraídos da API do Label Studio:
 
-   🏷️  Estatísticas de Extração NER:
-      • Registros com algum NER: 950
-      • Registros com 'cliente': 950
-      • Registros com 'produto': 950
+   Estatísticas de Extração NER:
+      • Registros com algum NER: 500
+      • Registros com 'cliente': 500
+      • Registros com 'produto': 500
 ```
 
 ---
 
-## 📊 Passo 8: Visualizar Dados no Dashboard
+## Passo 8: Visualizar Dados no Dashboard
 
 ### Opção A: Via Docker (Automático)
 
@@ -432,18 +432,18 @@ streamlit run streamlit\dashboard.py
 **Acesse**: http://localhost:8501
 
 **Você deve ver**:
-- ✅ KPIs agregados (se houver dados)
-- ✅ Tabelas com registros
-- ✅ Gráficos Plotly
-- ✅ Dados em tempo real
+- KPIs agregados (se houver dados)
+- Tabelas com registros
+- Gráficos Plotly
+- Dados em tempo real
 
-> **💡 Se o dashboard estiver vazio**: Execute o pipeline primeiro (Passo 7)
+> **Se o dashboard estiver vazio**: Execute o pipeline primeiro (Passo 7)
 >
-> **⚠️ IMPORTANTE**: O dashboard requer que o MinIO esteja rodando para acessar os dados da camada Gold
+> **IMPORTANTE**: O dashboard requer que o MinIO esteja rodando para acessar os dados da camada Gold
 
 ---
 
-## 🐛 Troubleshooting - Problemas Comuns
+## Troubleshooting - Problemas Comuns
 
 ### Problema 1: Container não inicia
 
@@ -464,7 +464,7 @@ docker-compose logs minio
 **Sintoma**: Erro ao executar scripts localmente
 
 **Solução**:
-- ✅ Já está corrigido! O sistema detecta automaticamente se está rodando local ou Docker
+- Já está corrigido! O sistema detecta automaticamente se está rodando local ou Docker
 - Se ainda ocorrer, certifique que Docker está rodando: `docker ps`
 
 ### Problema 3: Label Studio não aceita token
@@ -526,7 +526,7 @@ docker-compose config | grep MINIO_ACCESS_KEY
 
 ---
 
-## 📚 Comandos Úteis
+## Comandos Úteis
 
 ### Gerenciamento de Containers
 
@@ -577,39 +577,39 @@ docker network inspect dataops_dataops-network
 
 ---
 
-## ✅ Checklist Final
+## Checklist Final
 
 Antes de considerar o setup completo, verifique:
 
 **Containers**:
-- [ ] Todos containers estão "Up (healthy)"
-- [ ] Nenhum container em status "Exited"
+- Todos containers estão "Up (healthy)"
+- Nenhum container em status "Exited"
 
 **Configuração**:
-- [ ] .env criado com credenciais preenchidas
-- [ ] LABELSTUDIO_TOKEN é o Legacy Token (40 caracteres)
-- [ ] LABELSTUDIO_PROJECT corresponde ao ID correto
+- .env criado com credenciais preenchidas
+- LABELSTUDIO_TOKEN é o Legacy Token (40 caracteres)
+- LABELSTUDIO_PROJECT corresponde ao ID correto
 
 **Acesso aos Serviços**:
-- [ ] Airflow acessível em http://localhost:8080
-- [ ] MinIO acessível em http://localhost:9001
-- [ ] Label Studio acessível em http://localhost:8001
-- [ ] Streamlit acessível em http://localhost:8501
+- Airflow acessível em http://localhost:8080
+- MinIO acessível em http://localhost:9001
+- Label Studio acessível em http://localhost:8001
+- Streamlit acessível em http://localhost:8501
 
 **Funcionalidade**:
-- [ ] DAG aparece no Airflow
-- [ ] Buckets existem no MinIO (bronze, silver, gold, inbox)
-- [ ] Projeto existe no Label Studio
-- [ ] Pipeline executa sem erros
+- DAG aparece no Airflow
+- Buckets existem no MinIO (bronze, silver, gold, inbox)
+- Projeto existe no Label Studio
+- Pipeline executa sem erros
 
 **Testes**:
-- [ ] Executou pipeline manualmente (Passo 7)
-- [ ] Dados aparecem no dashboard
-- [ ] Logs não mostram erros críticos
+- Executou pipeline manualmente (Passo 7)
+- Dados aparecem no dashboard
+- Logs não mostram erros críticos
 
 ---
 
-## 🎓 Próximos Passos
+## Próximos Passos
 
 Agora que o setup está completo:
 
@@ -618,21 +618,15 @@ Agora que o setup está completo:
 3. **Execute o pipeline** via Airflow
 4. **Visualize resultados** no dashboard
 
-Para mais informações:
-- **[COMECE_AQUI.md](COMECE_AQUI.md)** - Quick start
-- **[DOCKER_COMPOSE_SETUP.md](DOCKER_COMPOSE_SETUP.md)** - Docker detalhado
-- **[PROXIMO_TESTE.md](PROXIMO_TESTE.md)** - Testes completos
-
 ---
 
-## 📞 Suporte
+## Suporte
 
 Se encontrar problemas:
 
 1. Consulte a seção **Troubleshooting** acima
 2. Verifique os logs: `docker-compose logs -f`
-3. Veja documentação específica em `docs/`
 
 ---
 
-**Pronto!** 🎉 Seu ambiente DataOps está configurado e funcionando!
+**Pronto!** Seu ambiente DataOps está configurado e funcionando!

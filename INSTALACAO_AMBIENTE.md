@@ -1,8 +1,8 @@
-# 🐍 Instalação Completa do Ambiente - Do Zero ao Pipeline Funcionando
+# Instalação Completa do Ambiente - Do Zero ao Pipeline Funcionando
 
 Este guia cobre desde a instalação do Conda até a execução completa do pipeline.
 
-## 📋 Pré-requisitos
+## Pré-requisitos
 
 - **Sistema Operacional**: Windows 10/11, Linux ou macOS
 - **RAM**: Mínimo 8GB (recomendado 16GB)
@@ -11,7 +11,7 @@ Este guia cobre desde a instalação do Conda até a execução completa do pipe
 
 ---
 
-## 🔧 Parte 1: Instalar Conda (se não tiver)
+## Parte 1: Instalar Conda (se não tiver)
 
 ### Opção A: Instalar Miniconda (Recomendado - Mais leve)
 
@@ -25,7 +25,7 @@ Este guia cobre desde a instalação do Conda até a execução completa do pipe
    - Aceite os termos
    - Escolha "Just Me" (recomendado)
    - Deixe o caminho padrão: `C:\Users\<seu_usuario>\miniconda3`
-   - **IMPORTANTE**: Marque ✅ "Add Miniconda3 to my PATH environment variable"
+   - **IMPORTANTE**: Marque "Add Miniconda3 to my PATH environment variable"
    - Clique em "Install"
 
 3. **Verifique a instalação**:
@@ -64,7 +64,7 @@ conda --version
 
 ---
 
-## 🐍 Parte 2: Criar Ambiente Conda
+## Parte 2: Criar Ambiente Conda
 
 ### 2.1 Criar ambiente com Python 3.10
 
@@ -101,7 +101,7 @@ python --version
 
 ---
 
-## 📦 Parte 3: Instalar UV (Gerenciador de Dependências)
+## Parte 3: Instalar UV (Gerenciador de Dependências)
 
 UV é um gerenciador de pacotes Python extremamente rápido, escrito em Rust.
 
@@ -134,7 +134,7 @@ uv --version
 
 ---
 
-## 🔌 Parte 4: Instalar Dependências do Projeto
+## Parte 4: Instalar Dependências do Projeto
 
 ### 4.1 Navegar até o diretório do projeto
 
@@ -184,7 +184,7 @@ streamlit --version
 
 ---
 
-## 🐳 Parte 5: Instalar Docker e Docker Compose
+## Parte 5: Instalar Docker e Docker Compose
 
 ### 5.1 Instalar Docker Desktop
 
@@ -236,7 +236,7 @@ docker run hello-world
 
 ---
 
-## 🔐 Parte 6: Configurar Variáveis de Ambiente
+## Parte 6: Configurar Variáveis de Ambiente
 
 ### 6.1 Criar arquivo .env
 
@@ -281,7 +281,7 @@ AIRFLOW_UID=50000
 
 ---
 
-## 🚀 Parte 7: Iniciar Containers Docker
+## Parte 7: Iniciar Containers Docker
 
 ### 7.1 Build das imagens
 
@@ -323,11 +323,11 @@ label-studio            Up (healthy)
 streamlit-dashboard     Up (healthy)
 ```
 
-> **⏱️ Aguarde**: Pode demorar 2-3 minutos até todos ficarem "healthy"
+> **Aguarde**: Pode demorar 2-3 minutos até todos ficarem "healthy"
 
 ---
 
-## 🏷️ Parte 8: Configurar Label Studio e Obter Token
+## Parte 8: Configurar Label Studio e Obter Token
 
 ### 8.1 Acessar Label Studio
 
@@ -351,8 +351,8 @@ http://localhost:8001
 1. **No Label Studio, clique em "Organization"** (menu lateral esquerdo)
 2. **Clique em "API Tokens Settings"**
 3. **Desmarque todas as flags EXCETO "Legacy tokens"**
-   - ✅ Deixe APENAS "Legacy tokens" marcado
-   - ❌ Desmarque as outras opções (isso evita que o token expire)
+   - Deixe APENAS "Legacy tokens" marcado
+   - Desmarque as outras opções (isso evita que o token expire)
 4. **Clique em "Save"**
 
 **Passo B: Copiar o Legacy Token**
@@ -412,7 +412,7 @@ https://drive.google.com/drive/folders/1WFkw54HojR1y_Io26_cNV5ni3888I2FZ?usp=sha
 
 ---
 
-## ✅ Parte 9: Verificar Instalação Completa
+## Parte 9: Verificar Instalação Completa
 
 ### 9.1 Verificar ambiente Python
 
@@ -438,14 +438,14 @@ docker-compose logs <nome_do_container>
 
 ### 9.3 Acessar cada serviço
 
-✅ **Airflow**: http://localhost:8080 (airflow/airflow)
-✅ **Label Studio**: http://localhost:8001 (label_ops@gmail.com/dataops@123)
-✅ **MinIO**: http://localhost:9001 (seu MINIO_ACCESS_KEY / MINIO_SECRET_KEY)
-✅ **Streamlit**: http://localhost:8501
+- **Airflow**: http://localhost:8080 (airflow/airflow)
+- **Label Studio**: http://localhost:8001 (label_ops@gmail.com/dataops@123)
+- **MinIO**: http://localhost:9001 (seu MINIO_ACCESS_KEY / MINIO_SECRET_KEY)
+- **Streamlit**: http://localhost:8501
 
 ---
 
-## 🎯 Parte 10: Executar Pipeline Pela Primeira Vez
+## Parte 10: Executar Pipeline Pela Primeira Vez
 
 ### Opção A: Via Airflow (Recomendado)
 
@@ -483,7 +483,7 @@ streamlit run streamlit\dashboard.py
    [EXTRAÍDO] cliente: 'joão silva'
    [EXTRAÍDO] valor: '150.50'
 
-✅ Pipeline executado com sucesso!
+Pipeline executado com sucesso!
 ```
 
 **Saída esperada do Streamlit**:
@@ -497,7 +497,7 @@ You can now view your Streamlit app in your browser.
 
 ---
 
-## 📊 Parte 11: Visualizar no Dashboard
+## Parte 11: Visualizar no Dashboard
 
 ### Opção A: Dashboard no Docker (Automático)
 
@@ -529,16 +529,16 @@ You can now view your Streamlit app in your browser.
 **Acesse**: http://localhost:8501
 
 **Você deve ver**:
-- ✅ KPIs agregados
-- ✅ Tabelas com dados
-- ✅ Gráficos Plotly
-- ✅ Dados em tempo real
+- KPIs agregados
+- Tabelas com dados
+- Gráficos Plotly
+- Dados em tempo real
 
-> **💡 IMPORTANTE**: O dashboard se conecta ao MinIO para ler os dados da camada Gold. Certifique-se de que o MinIO está rodando (via Docker ou localmente).
+> **IMPORTANTE**: O dashboard se conecta ao MinIO para ler os dados da camada Gold. Certifique-se de que o MinIO está rodando (via Docker ou localmente).
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Problema 1: Conda não reconhecido
 
@@ -594,7 +594,7 @@ conda create -n dataops python=3.11 -y
 
 ---
 
-## 📝 Comandos Úteis
+## Comandos Úteis
 
 ### Gerenciar Ambiente Conda
 
@@ -657,42 +657,42 @@ docker-compose up -d
 
 ---
 
-## ✅ Checklist Final
+## Checklist Final
 
 **Instalação Base**:
-- [ ] Conda instalado e funcionando
-- [ ] Ambiente `dataops` criado com Python 3.10
-- [ ] UV instalado e funcionando
-- [ ] Docker + Docker Compose instalados
+- Conda instalado e funcionando
+- Ambiente `dataops` criado com Python 3.10
+- UV instalado e funcionando
+- Docker + Docker Compose instalados
 
 **Dependências**:
-- [ ] Dependências do Python instaladas (via uv sync)
-- [ ] Airflow, Pandas, MinIO SDK verificados
-- [ ] Streamlit funcionando
+- Dependências do Python instaladas (via uv sync)
+- Airflow, Pandas, MinIO SDK verificados
+- Streamlit funcionando
 
 **Configuração**:
-- [ ] .env criado e preenchido
-- [ ] Legacy Token do Label Studio obtido
-- [ ] Containers Docker todos "healthy"
+- .env criado e preenchido
+- Legacy Token do Label Studio obtido
+- Containers Docker todos "healthy"
 
 **Funcionalidade**:
-- [ ] Todos os serviços acessíveis
-- [ ] Pipeline executa sem erros
-- [ ] Dashboard mostra dados
+- Todos os serviços acessíveis
+- Pipeline executa sem erros
+- Dashboard mostra dados
 
 ---
 
-## 🎓 Próximos Passos
+## Próximos Passos
 
 Agora que seu ambiente está completo:
 
 1. **Leia a documentação completa**: [SETUP_COMPLETO.md](SETUP_COMPLETO.md)
-2. **Execute o pipeline**: Siga [PROXIMO_TESTE.md](PROXIMO_TESTE.md)
-3. **Explore o código**: Veja [VISAO_GERAL_PROJETO.md](VISAO_GERAL_PROJETO.md)
+2. **Execute o pipeline via Airflow** ou scripts locais
+3. **Importe o dataset** no Label Studio
 
 ---
 
-## 📚 Referências
+## Referências
 
 - **Conda**: https://docs.conda.io/
 - **UV**: https://github.com/astral-sh/uv
@@ -702,4 +702,4 @@ Agora que seu ambiente está completo:
 
 ---
 
-**Pronto!** 🎉 Seu ambiente está 100% configurado e pronto para uso!
+**Pronto!** Seu ambiente está 100% configurado e pronto para uso!

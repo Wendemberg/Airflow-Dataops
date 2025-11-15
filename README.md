@@ -1,8 +1,8 @@
-# 🚀 DataOps Pipeline - Bronze, Silver, Gold
+# DataOps Pipeline - Bronze, Silver, Gold
 
 Pipeline completo de dados com arquitetura em camadas, orquestração Airflow e dashboard em tempo real.
 
-## 📊 Arquitetura
+## Arquitetura
 
 ```
 Label Studio (NER Annotations)
@@ -16,7 +16,7 @@ Label Studio (NER Annotations)
     Streamlit Dashboard
 ```
 
-## 🛠️ Stack Tecnológica
+## Stack Tecnológica
 
 - **Orquestração**: Apache Airflow (event-driven com sensores deferráveis)
 - **Storage**: MinIO (S3-compatible, 3 camadas)
@@ -26,9 +26,9 @@ Label Studio (NER Annotations)
 - **Infraestrutura**: Docker + Docker Compose
 - **Banco de Dados**: PostgreSQL
 
-## ⚡ Quick Start
+## Quick Start
 
-> **🆕 Primeira vez usando?** Veja [INSTALACAO_AMBIENTE.md](INSTALACAO_AMBIENTE.md) para instalação completa do zero (Conda + UV + Docker)
+> **Primeira vez usando?** Veja [INSTALACAO_AMBIENTE.md](INSTALACAO_AMBIENTE.md) para instalação completa do zero (Conda + UV + Docker)
 
 ### 1. Clone o repositório
 ```bash
@@ -63,38 +63,24 @@ docker-compose up -d
 - **MinIO**: http://localhost:9001 (veja .env)
 - **Dashboard**: http://localhost:8501
 
-## 📖 Documentação Completa
+## Documentação Completa
 
-### 🎯 Para Começar
-- **[INSTALACAO_AMBIENTE.md](INSTALACAO_AMBIENTE.md)** 🆕 **DO ZERO** - Instalação completa do ambiente
+### Para Começar
+- **[INSTALACAO_AMBIENTE.md](INSTALACAO_AMBIENTE.md)** - Instalação completa do ambiente do zero
   - Instalar Conda/Miniconda
   - Criar ambiente Python 3.10
   - Instalar UV (gerenciador de dependências)
   - Instalar Docker + Docker Compose
   - Configurar e executar todo o pipeline
 
-- **[SETUP_COMPLETO.md](SETUP_COMPLETO.md)** ⭐ **QUICK START** - Guia rápido (se já tem ambiente)
+- **[SETUP_COMPLETO.md](SETUP_COMPLETO.md)** - Guia rápido (se já tem ambiente)
   - Pré-requisitos
   - Instalação
-  - **Configuração do Legacy Token do Label Studio**
+  - Configuração do Legacy Token do Label Studio
   - Execução do pipeline
   - Troubleshooting
 
-### 📚 Guias Específicos
-- **[COMECE_AQUI.md](COMECE_AQUI.md)** - Quick start de 5 minutos
-- **[DOCKER_COMPOSE_SETUP.md](DOCKER_COMPOSE_SETUP.md)** - Docker Compose detalhado
-- **[PROXIMO_TESTE.md](PROXIMO_TESTE.md)** - Como testar o pipeline
-
-### 🔧 Documentação Técnica
-- **[RESUMO_CORRECOES_IMPLEMENTADAS.md](RESUMO_CORRECOES_IMPLEMENTADAS.md)** - Detalhes técnicos
-- **[FIXES_NER_EXTRACTION.md](FIXES_NER_EXTRACTION.md)** - NER extraction troubleshooting
-- **[STREAMLIT_NETWORK_FIX.md](STREAMLIT_NETWORK_FIX.md)** - Rede Docker e segurança
-
-### 📋 Referência Rápida
-- **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Comandos úteis
-- **[VISAO_GERAL_PROJETO.md](VISAO_GERAL_PROJETO.md)** - Visão geral completa
-
-## ⚠️ IMPORTANTE: Label Studio Legacy Token
+## IMPORTANTE: Label Studio Legacy Token
 
 Este pipeline requer o **Legacy Token** do Label Studio, não o Access Token (JWT).
 
@@ -107,8 +93,8 @@ Este pipeline requer o **Legacy Token** do Label Studio, não o Access Token (JW
 3. **Habilitar Legacy Tokens (evitar expiração)**:
    - Clique em **"Organization"** (menu lateral)
    - Clique em **"API Tokens Settings"**
-   - ✅ Deixe APENAS a flag **"Legacy tokens"** marcada
-   - ❌ Desmarque as outras opções
+   - Deixe APENAS a flag **"Legacy tokens"** marcada
+   - Desmarque as outras opções
    - Clique em **"Save"**
 
 4. **Copiar o token**:
@@ -120,17 +106,17 @@ Este pipeline requer o **Legacy Token** do Label Studio, não o Access Token (JW
 
 Ver detalhes completos em **[SETUP_COMPLETO.md](SETUP_COMPLETO.md) - Passo 4.3**
 
-## 📊 Dataset do Projeto
+## Dataset do Projeto
 
 O projeto utiliza um dataset de transações comerciais com anotações NER.
 
-**📥 Baixar dataset**:
+**Baixar dataset**:
 ```
 https://drive.google.com/drive/folders/1WFkw54HojR1y_Io26_cNV5ni3888I2FZ?usp=sharing
 ```
 
 **Conteúdo**:
-- Transações comerciais (cliente, produto, valor, etc.)
+- 500 registros de transações comerciais (cliente, produto, valor, etc.)
 - Anotações NER já realizadas
 - Pronto para importação no Label Studio
 
@@ -142,26 +128,25 @@ https://drive.google.com/drive/folders/1WFkw54HojR1y_Io26_cNV5ni3888I2FZ?usp=sha
 
 Ver instruções completas em **[INSTALACAO_AMBIENTE.md](INSTALACAO_AMBIENTE.md) - Parte 8.6**
 
-## 🎯 Principais Features
+## Principais Features
 
-✅ **Event-Driven Architecture** - Airflow detecta novos arquivos automaticamente
-✅ **3 Camadas (Bronze/Silver/Gold)** - Arquitetura Medallion
-✅ **NER Extraction** - Named Entity Recognition via Label Studio
-✅ **Debug Automático** - Logs detalhados de extração
-✅ **Segurança** - Credenciais em variáveis de ambiente
-✅ **Auto-detecção de Ambiente** - Funciona local e Docker
-✅ **Dashboard Real-time** - Streamlit com atualização automática
-✅ **Documentação Completa** - 10+ guias técnicos
+- **Event-Driven Architecture** - Airflow detecta novos arquivos automaticamente
+- **3 Camadas (Bronze/Silver/Gold)** - Arquitetura Medallion
+- **NER Extraction** - Named Entity Recognition via Label Studio
+- **Debug Automático** - Logs detalhados de extração
+- **Segurança** - Credenciais em variáveis de ambiente
+- **Auto-detecção de Ambiente** - Funciona local e Docker
+- **Dashboard Real-time** - Streamlit com atualização automática
 
-## 📈 Métricas
+## Métricas
 
-- **950+ registros/dia** processados
+- **500 registros** no dataset
 - **8 KPIs** pré-calculados
 - **3 camadas** de storage
 - **0 credenciais** hardcoded
 - **100% containerizado**
 
-## 🔧 Desenvolvimento
+## Desenvolvimento
 
 ### Executar localmente (fora do Docker)
 
@@ -182,7 +167,7 @@ python diagnose_data_flow.py
 streamlit run streamlit\dashboard.py
 ```
 
-> **💡 NOTA**: Se estiver usando Docker, o dashboard já está rodando automaticamente em http://localhost:8501
+> **NOTA**: Se estiver usando Docker, o dashboard já está rodando automaticamente em http://localhost:8501
 
 ### Estrutura de Diretórios
 
@@ -202,7 +187,7 @@ Dataops/
 └── docs/                   # Documentação completa
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Container não inicia
 ```bash
@@ -210,21 +195,21 @@ docker-compose logs <container_name>
 ```
 
 ### Erro "Failed to resolve 'minio'"
-✅ Já corrigido! O sistema detecta automaticamente o ambiente.
+Já corrigido! O sistema detecta automaticamente o ambiente.
 
 ### Label Studio - 401 Unauthorized
 Certifique que está usando **Legacy Token**, não Access Token.
 
 Ver mais em **[SETUP_COMPLETO.md](SETUP_COMPLETO.md) - Troubleshooting**
 
-## 📊 Fluxo de Dados
+## Fluxo de Dados
 
 1. **Ingestão**: Label Studio API → JSON estruturado → MinIO Bronze
 2. **Transformação**: Bronze → Limpeza + NER extraction → MinIO Silver
 3. **Agregação**: Silver → KPIs + Agregações → MinIO Gold
 4. **Visualização**: Gold → Streamlit Dashboard
 
-## 🎓 Conceitos Aplicados
+## Conceitos Aplicados
 
 - **DataOps**: Orquestração, monitoramento, versionamento
 - **Medallion Architecture**: Bronze (raw) → Silver (clean) → Gold (curated)
@@ -233,11 +218,11 @@ Ver mais em **[SETUP_COMPLETO.md](SETUP_COMPLETO.md) - Troubleshooting**
 - **Containerização**: Docker, isolamento, portabilidade
 - **Security**: Credenciais em variáveis de ambiente
 
-## 📝 Licença
+## Licença
 
 Este projeto foi desenvolvido como trabalho de conclusão de disciplina.
 
-## 🤝 Contribuindo
+## Contribuindo
 
 Contribuições são bem-vindas! Por favor:
 1. Fork o projeto
@@ -246,13 +231,11 @@ Contribuições são bem-vindas! Por favor:
 4. Push para a branch
 5. Abra um Pull Request
 
-## 📞 Suporte
+## Suporte
 
-- **Documentação**: Ver pasta `docs/` ou arquivos `.md` na raiz
+- **Documentação**: Ver arquivos `.md` na raiz do projeto
 - **Issues**: Abra uma issue no GitHub
 
 ---
 
-**Desenvolvido com** ❤️ **usando Python, Airflow, Docker e muito café** ☕
-
-⭐ **Se este projeto foi útil, deixe uma estrela!**
+**Desenvolvido usando Python, Airflow, Docker**
