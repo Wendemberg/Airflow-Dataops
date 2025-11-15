@@ -9,6 +9,7 @@ import plotly.express as px
 from datetime import datetime
 from minio import Minio
 import io
+import json
 from env_config import get_minio_config
 
 st.set_page_config(
@@ -70,6 +71,64 @@ def get_dimension(dim_name):
     except Exception:
         return None
 
+@st.cache_data(ttl=60)
+def get_pipeline_stats():
+    """Obtém estatísticas do pipeline (registros por camada)"""
+    try:
+        client = Minio(**MINIO_CONFIG)
+
+        stats = {
+            'bronze': 0,
+            'silver': 0,
+            'gold': 0,
+            'bronze_timestamp': 'N/A',
+            'silver_timestamp': 'N/A',
+            'gold_timestamp': 'N/A'
+        }
+
+        # Contar registros em Bronze (JSON)
+        try:
+            bronze_files = list(client.list_objects('bronze', recursive=True))
+            bronze_json = [f for f in bronze_files if f.object_name.endswith('.json')]
+            if bronze_json:
+                latest_bronze = max(bronze_json, key=lambda x: x.last_modified)
+                response = client.get_object('bronze', latest_bronze.object_name)
+                data = json.loads(response.read().decode('utf-8'))
+                stats['bronze'] = len(data) if isinstance(data, list) else (len(data.get('data', [])) if isinstance(data, dict) else 0)
+                stats['bronze_timestamp'] = latest_bronze.last_modified.strftime('%Y-%m-%d %H:%M:%S')
+        except Exception:
+            pass
+
+        # Contar registros em Silver (Parquet)
+        try:
+            silver_files = list(client.list_objects('silver', recursive=True))
+            silver_parquet = [f for f in silver_files if f.object_name.endswith('.parquet')]
+            if silver_parquet:
+                latest_silver = max(silver_parquet, key=lambda x: x.last_modified)
+                response = client.get_object('silver', latest_silver.object_name)
+                df_silver = pd.read_parquet(io.BytesIO(response.read()))
+                stats['silver'] = len(df_silver)
+                stats['silver_timestamp'] = latest_silver.last_modified.strftime('%Y-%m-%d %H:%M:%S')
+        except Exception:
+            pass
+
+        # Contar registros em Gold (Parquet)
+        try:
+            gold_files = list(client.list_objects('gold', recursive=True))
+            gold_parquet = [f for f in gold_files if 'gold_analytics' in f.object_name and f.object_name.endswith('.parquet')]
+            if gold_parquet:
+                latest_gold = max(gold_parquet, key=lambda x: x.last_modified)
+                response = client.get_object('gold', latest_gold.object_name)
+                df_gold = pd.read_parquet(io.BytesIO(response.read()))
+                stats['gold'] = len(df_gold)
+                stats['gold_timestamp'] = latest_gold.last_modified.strftime('%Y-%m-%d %H:%M:%S')
+        except Exception:
+            pass
+
+        return stats
+    except Exception as e:
+        return None
+
 # ============================================
 # HEADER
 # ============================================
@@ -124,13 +183,14 @@ st.markdown("---")
 # ============================================
 # ANÁLISES POR ABAS
 # ============================================
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "📈 Vendas",
     "👥 Clientes",
     "🏷️ Produtos",
     "🏙️ Geográfico",
     "💳 Pagamento",
-    "📊 Dados Brutos"
+    "📊 Dados Brutos",
+    "🔧 Pipeline"
 ])
 
 # TAB 1: VENDAS
@@ -330,6 +390,119 @@ with tab6:
         file_name=f"varejo_inteligente_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
         mime="text/csv"
     )
+
+# TAB 7: MONITORAMENTO DO PIPELINE
+with tab7:
+    st.subheader("🔧 Monitoramento do Pipeline")
+
+    # Obter estatísticas do pipeline
+    pipeline_stats = get_pipeline_stats()
+
+    if pipeline_stats:
+        # Métricas principais
+        col1, col2, col3, col4 = st.columns(4)
+
+        with col1:
+            st.metric("📂 Registros Bronze", f"{pipeline_stats['bronze']:,}")
+        with col2:
+            st.metric("✅ Registros Silver", f"{pipeline_stats['silver']:,}")
+        with col3:
+            st.metric("⭐ Registros Gold", f"{pipeline_stats['gold']:,}")
+        with col4:
+            taxa_limpeza = ((pipeline_stats['bronze'] - pipeline_stats['silver']) / pipeline_stats['bronze'] * 100) if pipeline_stats['bronze'] > 0 else 0
+            st.metric("🧹 Taxa de Limpeza", f"{taxa_limpeza:.1f}%")
+
+        st.markdown("---")
+
+        # Fluxo de dados através das camadas
+        st.markdown("#### 📊 Fluxo de Dados por Camada")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            # Gráfico de barras horizontal
+            camadas = ['Bronze', 'Silver', 'Gold']
+            registros = [pipeline_stats['bronze'], pipeline_stats['silver'], pipeline_stats['gold']]
+
+            fig = px.bar(
+                x=registros,
+                y=camadas,
+                orientation='h',
+                title="Registros por Camada",
+                labels={'x': 'Quantidade de Registros', 'y': 'Camada'},
+                color=registros,
+                color_continuous_scale='Viridis'
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+        with col2:
+            # Funil de processamento
+            fig = px.funnel(
+                x=registros,
+                y=camadas,
+                title="Funil de Processamento"
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+        st.markdown("---")
+
+        # Informações de timestamp
+        st.markdown("#### 📅 Última Atualização por Camada")
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.markdown("**🥉 Bronze**")
+            st.caption(f"Timestamp: {pipeline_stats['bronze_timestamp']}")
+            st.caption(f"Registros: {pipeline_stats['bronze']:,}")
+
+        with col2:
+            st.markdown("**🥈 Silver**")
+            st.caption(f"Timestamp: {pipeline_stats['silver_timestamp']}")
+            st.caption(f"Registros: {pipeline_stats['silver']:,}")
+            if pipeline_stats['bronze'] > 0:
+                retencao = (pipeline_stats['silver'] / pipeline_stats['bronze'] * 100)
+                st.caption(f"Retenção: {retencao:.1f}%")
+
+        with col3:
+            st.markdown("**🥇 Gold**")
+            st.caption(f"Timestamp: {pipeline_stats['gold_timestamp']}")
+            st.caption(f"Registros: {pipeline_stats['gold']:,}")
+            if pipeline_stats['silver'] > 0:
+                retencao = (pipeline_stats['gold'] / pipeline_stats['silver'] * 100)
+                st.caption(f"Retenção: {retencao:.1f}%")
+
+        st.markdown("---")
+
+        # Resumo do fluxo de dados
+        st.markdown("#### 🔄 Resumo do Fluxo de Dados")
+
+        resumo_data = {
+            'Etapa': ['Bronze → Silver', 'Silver → Gold', 'Bronze → Gold'],
+            'Registros Perdidos': [
+                pipeline_stats['bronze'] - pipeline_stats['silver'],
+                pipeline_stats['silver'] - pipeline_stats['gold'],
+                pipeline_stats['bronze'] - pipeline_stats['gold']
+            ],
+            'Taxa de Retenção (%)': [
+                (pipeline_stats['silver'] / pipeline_stats['bronze'] * 100) if pipeline_stats['bronze'] > 0 else 0,
+                (pipeline_stats['gold'] / pipeline_stats['silver'] * 100) if pipeline_stats['silver'] > 0 else 0,
+                (pipeline_stats['gold'] / pipeline_stats['bronze'] * 100) if pipeline_stats['bronze'] > 0 else 0
+            ]
+        }
+
+        df_resumo = pd.DataFrame(resumo_data)
+        st.dataframe(df_resumo, use_container_width=True)
+
+        # Informação adicional
+        st.info(
+            "ℹ️ **Informação**: "
+            "A taxa de limpeza representa a porcentagem de registros removidos durante a validação (Bronze → Silver). "
+            "A taxa de retenção mostra quantos registros foram mantidos em cada etapa do pipeline."
+        )
+
+    else:
+        st.warning("⚠️ Não foi possível carregar as estatísticas do pipeline. Verifique se há dados nas camadas Bronze, Silver e Gold.")
 
 # ============================================
 # FOOTER
