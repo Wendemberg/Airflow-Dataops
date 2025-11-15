@@ -76,7 +76,7 @@ MINIO_SECRET_KEY=SenhaSegura123!MinIO
 # ========================================
 # Label Studio Configuration
 # ========================================
-LABELSTUDIO_TOKEN=seu_token_aqui  # ⬅️ Você vai obter isso no Passo 4
+LABELSTUDIO_TOKEN=seu_token_aqui  # Você vai obter isso no Passo 4
 LABELSTUDIO_PROJECT=4
 
 # ========================================
@@ -85,7 +85,7 @@ LABELSTUDIO_PROJECT=4
 AIRFLOW_UID=50000
 ```
 
-> **💡 IMPORTANTE**: Deixe `LABELSTUDIO_TOKEN` vazio por enquanto. Você vai preencher no Passo 4.
+> **IMPORTANTE**: Deixe `LABELSTUDIO_TOKEN` vazio por enquanto. Você vai preencher no Passo 4.
 
 ---
 
@@ -155,7 +155,7 @@ http://localhost:8001
    - **Confirm Password**: `dataops@123`
 4. **Clique em "Create Account"**
 
-> **💡 NOTA**: Se o Label Studio já tiver sido inicializado anteriormente e você vir uma tela de login, use as credenciais padrão:
+> **NOTA**: Se o Label Studio já tiver sido inicializado anteriormente e você vir uma tela de login, use as credenciais padrão:
 > - **Email**: `admin@localhost.com`
 > - **Senha**: `123456`
 >
@@ -164,6 +164,8 @@ http://localhost:8001
 ### 4.3 Configurar Legacy Token (IMPORTANTE!)
 
 **ATENÇÃO**: O pipeline precisa do **LEGACY TOKEN**, não do Access Token normal!
+
+**Tutorial em vídeo**: https://drive.google.com/file/d/11teN7OjPgbhWD17H0z4XPJ5pYhE3D4_j/view?usp=sharing
 
 #### Passo a passo para configurar e obter o Legacy Token:
 
@@ -184,11 +186,12 @@ http://localhost:8001
 4. **Procure por "Legacy API Token"** ou **"API Token (Legacy)"**
 5. **Copie o token** (algo como: `a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0`)
 
-> **💡 IMPORTANTE**:
+> **IMPORTANTE**:
 > - A configuração em "Organization > API Tokens Settings" garante que o token não expire
 > - Deixar SOMENTE a flag "Legacy tokens" ativa é FUNDAMENTAL
 > - Não use o "Access Token" (JWT) - ele não funciona com este pipeline
 > - O Legacy Token tem formato: 40 caracteres hexadecimais
+> - **Este token DEVE ser inserido no arquivo .env**
 
 #### Imagem de referência:
 ```
@@ -197,10 +200,10 @@ http://localhost:8001
 ├────────────────────────────────────────┤
 │ ...                                    │
 │                                        │
-│ 🔑 Access Token                        │
+│ Access Token                           │
 │ ┌────────────────────────────────────┐ │
 │ │ Legacy API Token (deprecated)      │ │
-│ │ a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6... │ │ ⬅️ COPIE ESTE!
+│ │ a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6... │ │ <- COPIE ESTE!
 │ │ [Copy]                             │ │
 │ └────────────────────────────────────┘ │
 │                                        │
@@ -219,10 +222,10 @@ nano .env     # Linux/Mac
 
 Atualize a linha:
 ```env
-LABELSTUDIO_TOKEN=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0  # ⬅️ Cole seu token aqui
+LABELSTUDIO_TOKEN=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0  # Cole seu token aqui
 ```
 
-Salve o arquivo.
+**IMPORTANTE**: Salve o arquivo após inserir o token.
 
 ### 4.5 Reiniciar containers para aplicar o token
 
@@ -236,6 +239,8 @@ docker-compose restart streamlit
 ---
 
 ## Passo 5: Criar Projeto no Label Studio (se necessário)
+
+**Tutorial em vídeo**: https://drive.google.com/file/d/1sC-S7fQ0PFElqM8oX01OP-f2IsGlSrx_/view?usp=sharing
 
 Se você não tiver o projeto ID 4, crie um novo:
 
@@ -262,20 +267,25 @@ Se você não tiver o projeto ID 4, crie um novo:
 ### 5.2 Obter ID do projeto
 
 1. Acesse o projeto criado
-2. Veja a URL no navegador:
+2. **Veja a URL no navegador**:
    ```
-   http://localhost:8001/projects/4/data
-                                    ↑
-                              Este é o ID
+   http://localhost:8001/projects/3/data?tab=3
+                                   ↑
+                             Este é o ID do projeto
    ```
-3. Atualize o `.env`:
+   - O número após `/projects/` é o ID do projeto
+   - No exemplo acima, o ID é `3`
+
+3. **IMPORTANTE: Atualize o `.env` com o ID correto**:
    ```env
-   LABELSTUDIO_PROJECT=4  # ⬅️ Coloque o ID correto
+   LABELSTUDIO_PROJECT=3  # Coloque o ID que aparece na sua URL
    ```
+
+> **ATENÇÃO**: É FUNDAMENTAL inserir o ID correto do projeto no arquivo `.env`, caso contrário o pipeline não conseguirá buscar os dados do Label Studio.
 
 ### 5.3 Importar Dataset do Projeto
 
-**📊 Dataset disponível em**:
+**Dataset disponível em**:
 ```
 https://drive.google.com/drive/folders/1WFkw54HojR1y_Io26_cNV5ni3888I2FZ?usp=sharing
 ```
@@ -361,7 +371,7 @@ URL: http://localhost:8501
    - Clique no toggle para ativar (fica azul)
 
 3. **Trigger manual**:
-   - Clique no ícone de "play" ▶️ na DAG
+   - Clique no ícone de "play" na DAG
    - Clique em "Trigger DAG"
 
 4. **Acompanhe execução**:
@@ -388,9 +398,9 @@ python diagnose_data_flow.py
 
 **Saída esperada no transform_silver.py**:
 ```
-ℹ️  Detectado execução local. Usando endpoint: localhost:9000
+Detectado execução local. Usando endpoint: localhost:9000
 
-🏷️  Extraindo labels NER e padronizando...
+Extraindo labels NER e padronizando...
 
 REGISTRO 0:
    [DEBUG] Processando 1 anotação(ões)

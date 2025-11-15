@@ -80,9 +80,13 @@ docker-compose up -d
   - Execução do pipeline
   - Troubleshooting
 
-## IMPORTANTE: Label Studio Legacy Token
+## IMPORTANTE: Label Studio Legacy Token e Project ID
 
 Este pipeline requer o **Legacy Token** do Label Studio, não o Access Token (JWT).
+
+**Tutorial em vídeo**:
+- Como criar o Legacy Token: https://drive.google.com/file/d/11teN7OjPgbhWD17H0z4XPJ5pYhE3D4_j/view?usp=sharing
+- Como criar o projeto: https://drive.google.com/file/d/1sC-S7fQ0PFElqM8oX01OP-f2IsGlSrx_/view?usp=sharing
 
 **Como configurar e obter**:
 
@@ -102,7 +106,17 @@ Este pipeline requer o **Legacy Token** do Label Studio, não o Access Token (JW
    - **Account & Settings**
    - Procure por **"Legacy API Token"**
    - Copie o token (40 caracteres hexadecimais)
-   - Cole no `.env`: `LABELSTUDIO_TOKEN=seu_token_aqui`
+
+5. **Obter ID do Projeto**:
+   - Acesse o projeto no Label Studio
+   - Veja a URL do navegador: `http://localhost:8001/projects/3/data?tab=3`
+   - O número após `/projects/` é o ID do projeto (neste exemplo: `3`)
+
+6. **Inserir no arquivo .env**:
+   ```env
+   LABELSTUDIO_TOKEN=seu_token_aqui_40_caracteres
+   LABELSTUDIO_PROJECT=3  # ID do seu projeto
+   ```
 
 Ver detalhes completos em **[SETUP_COMPLETO.md](SETUP_COMPLETO.md) - Passo 4.3**
 

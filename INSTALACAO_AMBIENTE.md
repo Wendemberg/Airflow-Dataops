@@ -346,6 +346,10 @@ http://localhost:8001
 
 ### 8.3 Configurar e Obter Legacy Token
 
+**ATENÇÃO**: O pipeline precisa do **LEGACY TOKEN**, não do Access Token normal!
+
+**Tutorial em vídeo**: https://drive.google.com/file/d/11teN7OjPgbhWD17H0z4XPJ5pYhE3D4_j/view?usp=sharing
+
 **Passo A: Habilitar Legacy Tokens (evitar expiração)**
 
 1. **No Label Studio, clique em "Organization"** (menu lateral esquerdo)
@@ -362,9 +366,17 @@ http://localhost:8001
 3. **Procure "Legacy API Token"**
 4. **Copie o token** (40 caracteres hexadecimais)
 
-> ** IMPORTANTE**: A configuração em "Organization > API Tokens Settings" garante que o token não expire automaticamente.
+**Passo C: Obter ID do Projeto**
 
-### 8.4 Atualizar .env com token
+1. **Acesse o projeto no Label Studio**
+2. **Veja a URL no navegador**: `http://localhost:8001/projects/3/data?tab=3`
+3. **O número após `/projects/` é o ID do projeto** (neste exemplo: `3`)
+
+> **IMPORTANTE**:
+> - A configuração em "Organization > API Tokens Settings" garante que o token não expire automaticamente
+> - **Você DEVE inserir tanto o token quanto o ID do projeto no arquivo .env**
+
+### 8.4 Atualizar .env com token e project ID
 
 ```bash
 # Editar .env novamente
@@ -372,9 +384,10 @@ notepad .env  # Windows
 nano .env     # Linux/Mac
 ```
 
-Cole o token:
+**IMPORTANTE: Atualize AMBOS os valores**:
 ```env
-LABELSTUDIO_TOKEN=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+LABELSTUDIO_TOKEN=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0  # Cole seu token aqui
+LABELSTUDIO_PROJECT=3  # Cole o ID do projeto que aparece na URL
 ```
 
 ### 8.5 Reiniciar containers
@@ -438,17 +451,10 @@ docker-compose logs <nome_do_container>
 
 ### 9.3 Acessar cada serviço
 
-<<<<<<< HEAD
 - **Airflow**: http://localhost:8080 (airflow/airflow)
 - **Label Studio**: http://localhost:8001 (label_ops@gmail.com/dataops@123)
 - **MinIO**: http://localhost:9001 (seu MINIO_ACCESS_KEY / MINIO_SECRET_KEY)
 - **Streamlit**: http://localhost:8501
-=======
-**Airflow**: http://localhost:8080 (airflow/airflow)
-**Label Studio**: http://localhost:8001 (label_ops@gmail.com/dataops@123)
-**MinIO**: http://localhost:9001 (seu MINIO_ACCESS_KEY / MINIO_SECRET_KEY)
-**Streamlit**: http://localhost:8501
->>>>>>> 56eb96e4472ccab668005a192013d8ec6fe394e8
 
 ---
 
@@ -459,7 +465,7 @@ docker-compose logs <nome_do_container>
 1. **Acesse Airflow**: http://localhost:8080
 2. **Login**: airflow / airflow
 3. **Ative a DAG**: `00_event_driven_ingestion`
-4. **Trigger manualmente**: Clique no ▶️
+4. **Trigger manualmente**: Clique no ícone de "play"
 5. **Acompanhe execução**: Veja tasks sendo executadas
 
 ### Opção B: Executar Scripts Localmente
