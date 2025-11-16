@@ -180,6 +180,32 @@ Ver instruções completas em **[INSTALACAO_AMBIENTE.md](INSTALACAO_AMBIENTE.md)
 
 ## Desenvolvimento
 
+### Automação com Makefile
+
+O projeto inclui um **Makefile** para automatizar tarefas comuns:
+
+```bash
+# Ver todos os comandos disponíveis
+make help
+
+# Setup completo (primeira vez)
+make first-run
+
+# Executar pipeline completo
+make pipeline
+
+# Gerenciar Docker
+make docker-up       # Subir containers
+make docker-down     # Parar containers
+make docker-logs     # Ver logs
+
+# Dashboard local
+make dashboard
+
+# Limpeza
+make clean-buckets
+```
+
 ### Executar localmente (fora do Docker)
 
 ```bash

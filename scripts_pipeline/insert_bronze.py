@@ -27,7 +27,7 @@ def run():
     print("=" * 60)
 
     # 1. Conectar à API do Label Studio
-    print(f"\n📍 Conectando ao Label Studio ({LABEL_STUDIO_URL})...")
+    print(f"\n Conectando ao Label Studio ({LABEL_STUDIO_URL})...")
     try:
         client = LabelStudio(base_url=LABEL_STUDIO_URL, api_key=LABEL_STUDIO_API_KEY)
         # Verificar conexão
@@ -38,7 +38,7 @@ def run():
         raise
 
     # 2. Buscar dados do projeto
-    print(f"\n📍 Buscando tarefas do projeto {PROJECT_ID}...")
+    print(f"\n Buscando tarefas do projeto {PROJECT_ID}...")
     try:
         tasks = client.tasks.list(project=PROJECT_ID)
         # Converter objetos Pydantic para dict com serialização JSON (converte datetime automaticamente)

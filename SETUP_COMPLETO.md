@@ -1,5 +1,34 @@
 # Setup Completo - Guia Passo a Passo
 
+## 🚀 Instalação Rápida com Makefile (Recomendado)
+
+Se você já tem **make** e **docker** instalados:
+
+```bash
+# 1. Clonar o repositório
+git clone https://github.com/Wendemberg/Airflow-Dataops.git
+cd Airflow-Dataops
+
+# 2. Copiar .env
+cp .env.example .env
+# Configure as credenciais no .env
+
+# 3. Subir containers
+make docker-up
+
+# 4. Executar pipeline
+make pipeline
+
+# 5. Ver dashboard
+# Acesse: http://localhost:8501
+```
+
+**Ver todos os comandos**: `make help`
+
+---
+
+## 📖 Setup Manual Detalhado
+
 ## Pré-requisitos
 
 Antes de começar, certifique-se de ter instalado:
@@ -8,6 +37,7 @@ Antes de começar, certifique-se de ter instalado:
 - **Docker Compose** (versão 1.29 ou superior)
 - **Git** (para clonar o repositório)
 - **Python 3.9+** (apenas se for executar scripts localmente)
+- **Make** (opcional, para usar comandos automatizados)
 
 ### Verificar Instalação
 
@@ -23,6 +53,10 @@ docker-compose --version
 # Verificar Python (opcional)
 python --version
 # Esperado: Python 3.9.x ou superior
+
+# Verificar Make (opcional)
+make --version
+# Esperado: GNU Make 3.x ou superior
 ```
 
 ---

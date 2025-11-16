@@ -2,6 +2,32 @@
 
 Este guia cobre desde a instalação do Conda até a execução completa do pipeline.
 
+## 🚀 Instalação Rápida com Makefile (Recomendado)
+
+Se você já tem **make**, **conda** e **docker** instalados, pode automatizar todo o setup:
+
+```bash
+# Setup completo automatizado (cria ambiente + sobe containers)
+make first-run
+
+# Ativar ambiente
+conda activate dataops
+
+# Executar pipeline
+make pipeline
+
+# Ver dashboard
+make dashboard
+```
+
+**Ver todos os comandos disponíveis**: `make help`
+
+---
+
+## 📖 Instalação Manual Passo a Passo
+
+Se você prefere entender cada etapa ou não tem make instalado, siga o guia detalhado abaixo.
+
 ## Pré-requisitos
 
 - **Sistema Operacional**: Windows 10/11, Linux ou macOS
@@ -695,6 +721,106 @@ docker-compose up -d
 
 ---
 
+## Automação com Makefile
+
+O projeto inclui um **Makefile** com comandos prontos para facilitar operações comuns.
+
+### Ver Todos os Comandos Disponíveis
+
+```bash
+make help
+```
+
+### Comandos Mais Úteis
+
+#### Setup e Instalação
+```bash
+# Setup completo (primeira vez)
+make first-run
+
+# Criar ambiente conda + instalar dependências
+make setup
+
+# Instalar dependências (conda já ativado)
+make install
+```
+
+#### Gerenciar Docker
+```bash
+# Subir containers
+make docker-up
+
+# Parar containers
+make docker-down
+
+# Reiniciar containers
+make docker-restart
+
+# Ver logs
+make docker-logs
+
+# Ver status
+make docker-status
+```
+
+#### Executar Pipeline
+```bash
+# Pipeline completo (Bronze → Silver → Gold)
+make pipeline
+
+# Limpar buckets
+make clean-buckets
+
+# Etapas individuais
+make bronze    # Apenas Bronze
+make silver    # Apenas Silver
+make gold      # Apenas Gold
+make diagnose  # Diagnóstico
+```
+
+#### Dashboard
+```bash
+# Rodar dashboard localmente
+make dashboard
+```
+
+#### Desenvolvimento
+```bash
+# Rodar testes
+make test
+
+# Verificar código
+make lint
+
+# Formatar código
+make format
+
+# Verificar variáveis de ambiente
+make check-env
+```
+
+### Exemplo de Fluxo Completo
+
+```bash
+# 1. Setup inicial (primeira vez)
+make first-run
+
+# 2. Ativar ambiente
+conda activate dataops
+
+# 3. Configurar .env (manualmente)
+notepad .env  # Windows
+nano .env     # Linux/Mac
+
+# 4. Executar pipeline
+make pipeline
+
+# 5. Ver dashboard
+make dashboard
+```
+
+---
+
 ## Próximos Passos
 
 Agora que seu ambiente está completo:
@@ -702,6 +828,7 @@ Agora que seu ambiente está completo:
 1. **Leia a documentação completa**: [SETUP_COMPLETO.md](SETUP_COMPLETO.md)
 2. **Execute o pipeline via Airflow** ou scripts locais
 3. **Importe o dataset** no Label Studio
+4. **Use `make help`** para ver todos os comandos disponíveis
 
 ---
 
