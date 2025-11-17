@@ -1,213 +1,112 @@
 # Makefile - DataOps Pipeline
-# Automação de tarefas comuns do projeto
 
-.PHONY: help setup install docker-up docker-down docker-restart docker-logs clean-buckets pipeline dashboard test lint format
+.PHONY: help setup install init up down restart logs clean pipeline run dashboard test lint format
 
-# Variáveis
 PYTHON := python
 CONDA_ENV := dataops
-DOCKER_COMPOSE := docker-compose
 
-# Comando padrão: mostrar ajuda
+.DEFAULT_GOAL := help
+
 help:
-	@echo "=========================================="
-	@echo "  DataOps Pipeline - Comandos Disponíveis"
-	@echo "=========================================="
+	@echo "DataOps Pipeline - Comandos:"
 	@echo ""
-	@echo "Setup Inicial:"
-	@echo "  make setup           - Criar ambiente conda + instalar dependências"
-	@echo "  make install         - Instalar dependências (assume conda ativado)"
+	@echo "  make init       - Configurar .env automaticamente (primeira vez)"
+	@echo "  make setup      - Criar ambiente conda + instalar dependências"
+	@echo "  make install    - Instalar dependências"
 	@echo ""
-	@echo "Docker:"
-	@echo "  make docker-up       - Subir containers Docker"
-	@echo "  make docker-down     - Parar e remover containers"
-	@echo "  make docker-restart  - Reiniciar containers"
-	@echo "  make docker-logs     - Ver logs de todos os containers"
-	@echo "  make docker-status   - Ver status dos containers"
+	@echo "  make up         - Subir containers Docker"
+	@echo "  make down       - Parar containers"
+	@echo "  make restart    - Reiniciar containers"
+	@echo "  make logs       - Ver logs dos containers"
 	@echo ""
-	@echo "Pipeline:"
-	@echo "  make clean-buckets   - Limpar buckets MinIO (Bronze/Silver/Gold)"
-	@echo "  make pipeline        - Executar pipeline completo"
-	@echo "  make bronze          - Inserir dados na camada Bronze"
-	@echo "  make silver          - Processar camada Silver"
-	@echo "  make gold            - Processar camada Gold"
-	@echo "  make diagnose        - Diagnosticar fluxo de dados"
+	@echo "  make clean      - Limpar buckets MinIO"
+	@echo "  make run        - Executar pipeline completo"
+	@echo "  make dashboard  - Abrir dashboard Streamlit"
 	@echo ""
-	@echo "Dashboard:"
-	@echo "  make dashboard       - Rodar dashboard Streamlit localmente"
-	@echo ""
-	@echo "Desenvolvimento:"
-	@echo "  make test            - Rodar testes"
-	@echo "  make lint            - Verificar código com ruff"
-	@echo "  make format          - Formatar código com black"
-	@echo ""
-	@echo "Utilitários:"
-	@echo "  make check-env       - Verificar variáveis de ambiente"
-	@echo "  make first-run       - Setup completo (primeira vez)"
+	@echo "  make test       - Rodar testes"
+	@echo "  make lint       - Verificar código"
 	@echo ""
 
-# ==================== SETUP ====================
+# Inicialização
+init:
+ifeq (,$(wildcard .env))
+	@echo "Criando .env com credenciais padrão..."
+	@cp .env.example .env
+	@echo "Pronto! Credenciais:"
+	@echo "  MinIO: dataops_admin / DataOps2025!SecurePassword"
+	@echo "  Airflow: airflow / airflow"
+	@echo "  Label Studio: admin@localhost.com / 123456"
+	@echo ""
+	@echo "IMPORTANTE: Configure o LABELSTUDIO_TOKEN após subir os containers."
+else
+	@echo ".env já existe. Pulando..."
+endif
 
-# Setup completo: criar ambiente conda + instalar dependências
+# Setup
 setup:
-	@echo "🔧 Criando ambiente conda '$(CONDA_ENV)' com Python 3.10..."
 	conda create -n $(CONDA_ENV) python=3.10 -y
-	@echo ""
-	@echo "📦 Instalando dependências com UV..."
 	conda run -n $(CONDA_ENV) pip install uv
-	conda run -n $(CONDA_ENV) uv sync
-	@echo ""
-	@echo "✅ Ambiente criado com sucesso!"
-	@echo ""
-	@echo "👉 Próximos passos:"
-	@echo "   1. Ative o ambiente: conda activate $(CONDA_ENV)"
-	@echo "   2. Configure .env com suas credenciais"
-	@echo "   3. Suba os containers: make docker-up"
-	@echo ""
+	conda run -n $(CONDA_ENV) uv sync --directory enviroments
+	@echo "Pronto! Execute: conda activate $(CONDA_ENV)"
 
-# Instalar dependências (assume conda já ativado)
 install:
-	@echo "📦 Instalando dependências com UV..."
-	uv sync
-	@echo "✅ Dependências instaladas!"
+	uv sync --directory enviroments
 
-# ==================== DOCKER ====================
-
-# Subir containers Docker
-docker-up:
-	@echo "🐳 Subindo containers Docker..."
-	$(DOCKER_COMPOSE) up -d
+# Docker
+up: init
+	docker-compose up -d
 	@echo ""
-	@echo "⏳ Aguardando containers ficarem healthy (pode demorar 2-3 min)..."
-	@sleep 10
-	@$(DOCKER_COMPOSE) ps
+	@echo "Containers iniciados! Aguarde 2-3 minutos para inicialização completa."
 	@echo ""
-	@echo "✅ Containers iniciados!"
+	@echo "Serviços disponíveis:"
+	@echo "  Airflow:      http://localhost:8080 (airflow/airflow)"
+	@echo "  Label Studio: http://localhost:8001 (admin@localhost.com/123456)"
+	@echo "  MinIO:        http://localhost:9001 (dataops_admin/DataOps2025!SecurePassword)"
+	@echo "  Dashboard:    http://localhost:8501"
 	@echo ""
-	@echo "🌐 Serviços disponíveis:"
-	@echo "   Airflow:      http://localhost:8080 (airflow/airflow)"
-	@echo "   Label Studio: http://localhost:8001"
-	@echo "   MinIO:        http://localhost:9001"
-	@echo "   Streamlit:    http://localhost:8501"
-	@echo ""
+	@echo "Verificar status: make logs"
 
-# Parar containers
-docker-down:
-	@echo "🛑 Parando containers Docker..."
-	$(DOCKER_COMPOSE) down
-	@echo "✅ Containers parados!"
+down:
+	docker-compose down
 
-# Reiniciar containers
-docker-restart:
-	@echo "🔄 Reiniciando containers..."
-	$(DOCKER_COMPOSE) restart
-	@echo "✅ Containers reiniciados!"
+restart:
+	docker-compose restart
 
-# Ver logs dos containers
-docker-logs:
-	@echo "📋 Logs dos containers (Ctrl+C para sair):"
-	$(DOCKER_COMPOSE) logs -f
+logs:
+	docker-compose logs -f
 
-# Ver status dos containers
-docker-status:
-	@echo "📊 Status dos containers:"
-	@$(DOCKER_COMPOSE) ps
-
-# ==================== PIPELINE ====================
-
-# Limpar buckets MinIO
-clean-buckets:
-	@echo "🧹 Limpando buckets MinIO..."
+# Pipeline
+clean:
 	$(PYTHON) -m scripts_pipeline.clean_buckets
-	@echo "✅ Buckets limpos!"
 
-# Executar pipeline completo
-pipeline: bronze silver gold diagnose
-	@echo ""
-	@echo "✅ Pipeline completo executado com sucesso!"
-	@echo ""
-
-# Inserir dados em Bronze
 bronze:
-	@echo "📂 Inserindo dados na camada Bronze..."
 	$(PYTHON) -m scripts_pipeline.insert_bronze
 
-# Processar Silver
 silver:
-	@echo "✅ Processando camada Silver..."
 	$(PYTHON) -m scripts_pipeline.transform_silver
 
-# Processar Gold
 gold:
-	@echo "⭐ Processando camada Gold..."
 	$(PYTHON) -m scripts_pipeline.aggregate_gold
 
-# Diagnosticar fluxo de dados
 diagnose:
-	@echo "🔍 Diagnosticando fluxo de dados..."
 	$(PYTHON) diagnose_data_flow.py
 
-# ==================== DASHBOARD ====================
+run: bronze silver gold diagnose
+	@echo "Pipeline executado!"
 
-# Rodar dashboard Streamlit
+pipeline: run
+
+# Dashboard
 dashboard:
-	@echo "🎨 Iniciando dashboard Streamlit..."
-	@echo "📊 Acesse: http://localhost:8501"
-	@echo ""
+	@echo "Dashboard: http://localhost:8501"
 	streamlit run streamlit/dashboard.py
 
-# ==================== DESENVOLVIMENTO ====================
-
-# Rodar testes
+# Dev
 test:
-	@echo "🧪 Rodando testes..."
 	pytest tests/ -v
 
-# Verificar código com ruff
 lint:
-	@echo "🔍 Verificando código com ruff..."
 	ruff check .
 
-# Formatar código com black
 format:
-	@echo "✨ Formatando código com black..."
 	black .
-	@echo "✅ Código formatado!"
-
-# ==================== UTILITÁRIOS ====================
-
-# Verificar variáveis de ambiente
-check-env:
-	@echo "🔍 Verificando variáveis de ambiente..."
-	@if [ ! -f .env ]; then \
-		echo "❌ Arquivo .env não encontrado!"; \
-		echo "👉 Copie .env.example para .env e configure as credenciais"; \
-		exit 1; \
-	else \
-		echo "✅ Arquivo .env encontrado"; \
-		echo ""; \
-		echo "Verificando variáveis obrigatórias..."; \
-		grep -q "MINIO_ACCESS_KEY=" .env && echo "  ✅ MINIO_ACCESS_KEY configurada" || echo "  ❌ MINIO_ACCESS_KEY não configurada"; \
-		grep -q "MINIO_SECRET_KEY=" .env && echo "  ✅ MINIO_SECRET_KEY configurada" || echo "  ❌ MINIO_SECRET_KEY não configurada"; \
-		grep -q "LABELSTUDIO_TOKEN=" .env && echo "  ✅ LABELSTUDIO_TOKEN configurada" || echo "  ❌ LABELSTUDIO_TOKEN não configurada"; \
-		grep -q "LABELSTUDIO_PROJECT=" .env && echo "  ✅ LABELSTUDIO_PROJECT configurada" || echo "  ❌ LABELSTUDIO_PROJECT não configurada"; \
-	fi
-
-# Setup completo para primeira execução
-first-run: setup docker-up
-	@echo ""
-	@echo "=========================================="
-	@echo "  🎉 Setup Completo Finalizado!"
-	@echo "=========================================="
-	@echo ""
-	@echo "📋 Checklist:"
-	@echo "  ✅ Ambiente conda criado"
-	@echo "  ✅ Dependências instaladas"
-	@echo "  ✅ Containers Docker iniciados"
-	@echo ""
-	@echo "👉 Próximos passos:"
-	@echo "  1. Ative o ambiente: conda activate $(CONDA_ENV)"
-	@echo "  2. Configure Label Studio token (ver README.md)"
-	@echo "  3. Execute o pipeline: make pipeline"
-	@echo "  4. Veja o dashboard: make dashboard"
-	@echo ""

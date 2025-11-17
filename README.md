@@ -26,42 +26,89 @@ Label Studio (NER Annotations)
 - **Infraestrutura**: Docker + Docker Compose
 - **Banco de Dados**: PostgreSQL
 
-## Quick Start
+## Quick Start (Usando Makefile)
 
 > **Primeira vez usando?** Veja [INSTALACAO_AMBIENTE.md](INSTALACAO_AMBIENTE.md) para instalação completa do zero (Conda + UV + Docker)
 
-### 1. Clone o repositório
+### Opção 1: Com Makefile (Recomendado) ⚡
+
+**Setup em 2 comandos:**
+
 ```bash
+# 1. Clone o repositório
 git clone <URL>
 cd Dataops
+
+# 2. Suba a infraestrutura (configura .env automaticamente)
+make up
 ```
 
-### 2. Configure o ambiente Python (opcional - local)
+O comando `make up` irá:
+- ✅ Criar arquivo `.env` com credenciais padrão (se não existir)
+- ✅ Subir todos os containers Docker
+- ✅ Configurar MinIO, Airflow, Label Studio e Dashboard
+
+**Acesse os serviços:**
+- **Airflow**: http://localhost:8080 (airflow/airflow)
+- **Label Studio**: http://localhost:8001 (admin@localhost.com/123456)
+- **MinIO**: http://localhost:9001 (dataops_admin/DataOps2025!SecurePassword)
+- **Dashboard**: http://localhost:8501
+
 ```bash
-# Criar ambiente conda
+# 3. Configure Label Studio token (veja seção abaixo)
+# Edite .env e adicione seu LABELSTUDIO_TOKEN
+
+# 4. Execute o pipeline
+make run
+
+# 5. Visualize o dashboard
+make dashboard
+```
+
+**Ambiente Python (opcional - apenas para desenvolvimento local):**
+```bash
+make setup
+conda activate dataops
+```
+
+### Opção 2: Comandos Manuais
+
+```bash
+# 1. Clone o repositório
+git clone <URL>
+cd Dataops
+
+# 2. Configure o ambiente Python (opcional - local)
 conda create -n dataops python=3.10 -y
 conda activate dataops
-
-# Instalar dependências com UV
 uv sync --directory enviroments
-```
 
-### 3. Configure as credenciais
-```bash
+# 3. Configure as credenciais (OPCIONAL - já sobe com padrão)
 cp .env.example .env
-# Edite .env com suas credenciais
-```
+# Edite .env apenas se quiser alterar credenciais
 
-### 4. Inicie o ambiente Docker
-```bash
+# 4. Inicie o ambiente Docker
 docker-compose up -d
+
+# 5. Acesse os serviços (mesmas URLs acima)
 ```
 
-### 5. Acesse os serviços
-- **Airflow**: http://localhost:8080 (airflow/airflow)
-- **Label Studio**: http://localhost:8001 (label_ops@gmail.com/dataops@123)
-- **MinIO**: http://localhost:9001 (veja .env)
-- **Dashboard**: http://localhost:8501
+### Comandos do Makefile Disponíveis
+
+```bash
+make          # Ver todos os comandos disponíveis
+make setup    # Criar ambiente conda + instalar dependências
+make install  # Instalar/atualizar dependências
+make up       # Subir containers Docker
+make down     # Parar containers
+make restart  # Reiniciar containers
+make logs     # Ver logs dos containers
+make clean    # Limpar buckets MinIO
+make run      # Executar pipeline completo
+make dashboard # Abrir dashboard Streamlit
+make test     # Rodar testes
+make lint     # Verificar código
+```
 
 ## Documentação Completa
 

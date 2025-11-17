@@ -13,14 +13,14 @@ x-airflow-common: &airflow-common
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
-    # MinIO - credenciais vêm OBRIGATORIAMENTE de .env
+    # MinIO - usa valores padrão se .env não existir
     MINIO_ENDPOINT: minio:9000
-    MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-    MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-    # Label Studio - credenciais vêm OBRIGATORIAMENTE de .env
+    MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-dataops_admin}
+    MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-DataOps2025!SecurePassword}
+    # Label Studio - usa valores padrão se .env não existir
     LABELSTUDIO_URL: http://label-studio:8080
-    LABELSTUDIO_TOKEN: ${LABELSTUDIO_TOKEN}
-    LABELSTUDIO_PROJECT: ${LABELSTUDIO_PROJECT}
+    LABELSTUDIO_TOKEN: ${LABELSTUDIO_TOKEN:-SUBSTITUIR_PELO_SEU_TOKEN_AQUI}
+    LABELSTUDIO_PROJECT: ${LABELSTUDIO_PROJECT:-4}
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
@@ -142,8 +142,8 @@ services:
       - "9000:9000"
       - "9001:9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
-      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-dataops_admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-DataOps2025!SecurePassword}
     command: server /data --console-address ":9001"
     volumes:
       - minio-data:/data
@@ -162,8 +162,8 @@ services:
     container_name: minio-init
     entrypoint: /bin/bash
     environment:
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-dataops_admin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-DataOps2025!SecurePassword}
     command:
       - -c
       - |
@@ -332,12 +332,12 @@ services:
       STREAMLIT_CLIENT_LOGGER_LEVEL: info
       # MinIO Configuration - conectar via hostname na mesma rede
       MINIO_ENDPOINT: minio:9000
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-dataops_admin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-DataOps2025!SecurePassword}
       # Label Studio Configuration - conectar via hostname na mesma rede
       LABELSTUDIO_URL: http://label-studio:8080
-      LABELSTUDIO_TOKEN: ${LABELSTUDIO_TOKEN}
-      LABELSTUDIO_PROJECT: ${LABELSTUDIO_PROJECT}
+      LABELSTUDIO_TOKEN: ${LABELSTUDIO_TOKEN:-SUBSTITUIR_PELO_SEU_TOKEN_AQUI}
+      LABELSTUDIO_PROJECT: ${LABELSTUDIO_PROJECT:-4}
     volumes:
       - ./streamlit:/app/streamlit
       - ./scripts_pipeline:/app/scripts_pipeline
